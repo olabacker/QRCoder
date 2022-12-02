@@ -223,29 +223,27 @@ namespace QRCoder
             /// </summary>
             public void WriteScanlines(byte[] scanlines)
             {
-                using (var idatStream = new MemoryStream())
-                {
-                    Deflate(idatStream, scanlines);
+                using var idatStream = new MemoryStream();
+                Deflate(idatStream, scanlines);
 
-                    this.WriteChunkStart(IDAT, (int)(idatStream.Length + 6));
+                this.WriteChunkStart(IDAT, (int)(idatStream.Length + 6));
 
-                    // Deflate header.
-                    this.stream.WriteByte(0x78); // 8 Deflate algorithm, 7 max window size
-                    this.stream.WriteByte(0x9C); // Check bits.
+                // Deflate header.
+                this.stream.WriteByte(0x78); // 8 Deflate algorithm, 7 max window size
+                this.stream.WriteByte(0x9C); // Check bits.
 
-                    // Compressed data.
-                    idatStream.Position = 0;
+                // Compressed data.
+                idatStream.Position = 0;
 #if NET35
                     idatStream.WriteTo(this.stream);
 #else
-                    idatStream.CopyTo(this.stream);
+                idatStream.CopyTo(this.stream);
 #endif
-                    // Deflate checksum.
-                    var adler = Adler32(scanlines, 0, scanlines.Length);
-                    this.WriteIntBigEndian(adler);
+                // Deflate checksum.
+                var adler = Adler32(scanlines, 0, scanlines.Length);
+                this.WriteIntBigEndian(adler);
 
-                    this.WriteChunkEnd();
-                }
+                this.WriteChunkEnd();
             }
 
             /// <summary>
@@ -280,10 +278,8 @@ namespace QRCoder
 
             private static void Deflate(Stream output, byte[] bytes)
             {
-                using (var deflateStream = new DeflateStream(output, CompressionMode.Compress, leaveOpen: true))
-                {
-                    deflateStream.Write(bytes, 0, bytes.Length);
-                }
+                using var deflateStream = new DeflateStream(output, CompressionMode.Compress, leaveOpen: true);
+                deflateStream.Write(bytes, 0, bytes.Length);
             }
 
             // Reference implementation from RFC 1950. Not optimized.

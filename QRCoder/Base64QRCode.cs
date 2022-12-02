@@ -7,9 +7,6 @@ using static QRCoder.QRCodeGenerator;
 
 namespace QRCoder
 {
-#if NET6_0_WINDOWS
-    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
-#endif
     public class Base64QRCode : AbstractQRCode, IDisposable
     {
         private QRCode qr;

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing.Imaging;
 using System.IO;
 using NDesk.Options;
 using QRCoderConsole.DataObjects;
@@ -151,8 +150,8 @@ namespace QRCoderConsole
                             {
                                 using (var bitmap = code.GetGraphic(pixelsPerModule, foreground, background, true))
                                 {
-                                    var actualFormat = new OptionSetter().GetImageFormat(imgFormat.ToString());
-                                    bitmap.Save(outputFileName, actualFormat);
+                                    //var actualFormat = new OptionSetter().GetImageFormat(imgFormat.ToString());
+                                    //bitmap.Save(outputFileName, actualFormat);
                                 }
                             }
                             break;
@@ -251,28 +250,6 @@ namespace QRCoderConsole
             return level;
         }
 
-#if NET6_0_WINDOWS
-    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
-#endif
-        public ImageFormat GetImageFormat(string value)
-        {
-            switch (value.ToLower())
-            {
-                case "jpg":
-                    return ImageFormat.Jpeg;
-                case "jpeg":
-                    return ImageFormat.Jpeg;
-                case "gif":
-                    return ImageFormat.Gif;
-                case "bmp":
-                    return ImageFormat.Bmp;
-                case "tiff":
-                    return ImageFormat.Tiff;
-                case "png":
-                default:
-                    return ImageFormat.Png;
-            }
-        }
     }
 }
 

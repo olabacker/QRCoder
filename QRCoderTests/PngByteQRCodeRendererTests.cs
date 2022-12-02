@@ -3,6 +3,7 @@ using QRCoder;
 using Shouldly;
 using QRCoderTests.Helpers.XUnitExtenstions;
 using QRCoderTests.Helpers;
+using SixLabors.ImageSharp;
 #if !NETCOREAPP1_1
 
 using System.IO;
@@ -34,12 +35,10 @@ namespace QRCoderTests
             var result = HelperFunctions.ByteArrayToHash(pngCodeGfx);
             result.ShouldBe("1fc35c3bea6fad47427143ce716c83b8");
 #else
-            using (var mStream = new MemoryStream(pngCodeGfx))
-            {
-                var bmp = (Bitmap)Image.FromStream(mStream);
-                var result = HelperFunctions.BitmapToHash(bmp);
-                result.ShouldBe("18b19e6037cff06ae995d8d487b0e46e");
-            }
+            using var mStream = new MemoryStream(pngCodeGfx);
+            var bmp = (Image)Image.Load(mStream);
+            var result = HelperFunctions.BitmapToHash(bmp);
+            result.ShouldBe("18b19e6037cff06ae995d8d487b0e46e");
 #endif        
         }
 
@@ -58,7 +57,7 @@ namespace QRCoderTests
 #else
             using (var mStream = new MemoryStream(pngCodeGfx))
             {
-                var bmp = (Bitmap)Image.FromStream(mStream);
+                var bmp = (Image)Image.Load(mStream);
                 var result = HelperFunctions.BitmapToHash(bmp);
                 result.ShouldBe("37ae73e90b66beac317b790be3db24cc");
             }
@@ -75,17 +74,10 @@ namespace QRCoderTests
             var data = gen.CreateQrCode("This is a quick test! 123#?", QRCodeGenerator.ECCLevel.L);
             var pngCodeGfx = new PngByteQRCode(data).GetGraphic(5, new byte[] { 255, 255, 255, 127 }, new byte[] { 0, 0, 255 });
 
-#if NETCOREAPP1_1
-            var result = HelperFunctions.ByteArrayToHash(pngCodeGfx);
-            result.ShouldBe("627ce564fb5e17be42e4a85e907a17b5");
-#else
-            using (var mStream = new MemoryStream(pngCodeGfx))
-            {
-                var bmp = (Bitmap)Image.FromStream(mStream);
-                var result = HelperFunctions.BitmapToHash(bmp);
-                result.ShouldBe("c56c2a9535fd8e9a92a6ac9709d21e67");
-            }
-#endif   
+            using var mStream = new MemoryStream(pngCodeGfx);
+            var bmp = (Image)Image.Load(mStream);
+            var result = HelperFunctions.BitmapToHash(bmp);
+            result.ShouldBe("c56c2a9535fd8e9a92a6ac9709d21e67");
         }
 
         [Fact]
@@ -97,23 +89,13 @@ namespace QRCoderTests
             var data = gen.CreateQrCode("This is a quick test! 123#?", QRCodeGenerator.ECCLevel.L);
             var pngCodeGfx = new PngByteQRCode(data).GetGraphic(5, new byte[] { 255, 255, 255, 127 }, new byte[] { 0, 0, 255 }, false);
 
-#if NETCOREAPP1_1
-            var result = HelperFunctions.ByteArrayToHash(pngCodeGfx);
-            result.ShouldBe("07f760b3eb54901840b094d31e299713");
-#else
             File.WriteAllBytes(@"C:\Temp\pngbyte_35.png", pngCodeGfx);
-            using (var mStream = new MemoryStream(pngCodeGfx))
-            {
-                var bmp = (Bitmap)Image.FromStream(mStream);
-                bmp.MakeTransparent(Color.Transparent);
-                var result = HelperFunctions.BitmapToHash(bmp);
-#if NET35_OR_GREATER || NET40_OR_GREATER
-                result.ShouldBe("75be11d582575617d2490c54b69e844e");
-#else
-                result.ShouldBe("fbbc8255ebf3e4f4a1d21f0dd15f76f8");
-#endif
-            }
-#endif
+            using var mStream = new MemoryStream(pngCodeGfx);
+            var bmp = (Image)Image.Load(mStream);
+            //bmp.MakeTransparent(Color.Transparent);
+            var result = HelperFunctions.BitmapToHash(bmp);
+
+            result.ShouldBe("fbbc8255ebf3e4f4a1d21f0dd15f76f8");
         }
 
         [Fact]
@@ -138,7 +120,7 @@ namespace QRCoderTests
 #else
             using (var mStream = new MemoryStream(pngCodeGfx))
             {
-                var bmp = (Bitmap)Image.FromStream(mStream);
+                var bmp = (Image)Image.Load(mStream);
                 var result = HelperFunctions.BitmapToHash(bmp);
                 result.ShouldBe("1978fb11ce26acf9b6cb7490b4c44ef2");
             }
@@ -158,7 +140,7 @@ namespace QRCoderTests
 #else
             using (var mStream = new MemoryStream(pngCodeGfx))
             {
-                var bmp = (Bitmap)Image.FromStream(mStream);
+                var bmp = (Image)Image.Load(mStream);
                 var result = HelperFunctions.BitmapToHash(bmp);
                 result.ShouldBe("c56c2a9535fd8e9a92a6ac9709d21e67");
             }
