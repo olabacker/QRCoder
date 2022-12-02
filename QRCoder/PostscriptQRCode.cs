@@ -1,6 +1,7 @@
 ﻿#if NETFRAMEWORK || NETSTANDARD2_0 || NET5_0 || NET6_0_WINDOWS
+using SixLabors.ImageSharp;
 using System;
-using System.Drawing;
+
 using static QRCoder.QRCodeGenerator;
 
 namespace QRCoder
@@ -41,7 +42,7 @@ namespace QRCoder
 
         public string GetGraphic(Size viewBox, string darkColorHex, string lightColorHex, bool drawQuietZones = true, bool epsFormat = false)
         {
-            return this.GetGraphic(viewBox, ColorTranslator.FromHtml(darkColorHex), ColorTranslator.FromHtml(lightColorHex), drawQuietZones, epsFormat);
+            return this.GetGraphic(viewBox, Color.HotPink /*ColorTranslator.FromHtml(darkColorHex)*/, Color.HotPink /*ColorTranslator.FromHtml(lightColorHex)*/, drawQuietZones, epsFormat);
         }
 
         public string GetGraphic(Size viewBox, Color darkColor, Color lightColor, bool drawQuietZones = true, bool epsFormat = false)
@@ -54,11 +55,11 @@ namespace QRCoder
                 DateTime.Now.ToString("s"), CleanSvgVal(viewBox.Width), CleanSvgVal(pointsPerModule),
                 epsFormat ? "EPSF-3.0" : string.Empty
             });
-            psFile += string.Format(psFunctions, new object[] {
-                CleanSvgVal(darkColor.R /255.0), CleanSvgVal(darkColor.G /255.0), CleanSvgVal(darkColor.B /255.0),
-                CleanSvgVal(lightColor.R /255.0), CleanSvgVal(lightColor.G /255.0), CleanSvgVal(lightColor.B /255.0),
-                drawableModulesCount
-            });
+            //psFile += string.Format(psFunctions, new object[] {
+            //    CleanSvgVal(darkColor.R /255.0), CleanSvgVal(darkColor.G /255.0), CleanSvgVal(darkColor.B /255.0),
+            //    CleanSvgVal(lightColor.R /255.0), CleanSvgVal(lightColor.G /255.0), CleanSvgVal(lightColor.B /255.0),
+            //    drawableModulesCount
+            //});
 
             for (int xi = offset; xi < offset + drawableModulesCount; xi++)
             {

@@ -1,9 +1,9 @@
 #if NETFRAMEWORK || NETSTANDARD2_0 || NET5_0 || NET6_0_WINDOWS
 using QRCoder.Extensions;
+using SixLabors.ImageSharp;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
 using static QRCoder.QRCodeGenerator;
@@ -94,7 +94,7 @@ namespace QRCoder
         /// <returns>SVG as string</returns>
         public string GetGraphic(Size viewBox, Color darkColor, Color lightColor, bool drawQuietZones = true, SizingMode sizingMode = SizingMode.WidthHeightAttribute, SvgLogo logo = null)
         {
-            return this.GetGraphic(viewBox, ColorTranslator.ToHtml(Color.FromArgb(darkColor.ToArgb())), ColorTranslator.ToHtml(Color.FromArgb(lightColor.ToArgb())), drawQuietZones, sizingMode, logo);
+            return this.GetGraphic(viewBox, Color.HotPink /*ColorTranslator.ToHtml(Color.FromArgb(darkColor.ToArgb()))*/ , Color.HotPink /*ColorTranslator.ToHtml(Color.FromArgb(lightColor.ToArgb()))*/, drawQuietZones, sizingMode, logo);
         }
 
         /// <summary>
@@ -277,17 +277,17 @@ namespace QRCoder
             /// <param name="iconRasterized">Logo to be rendered as Bitmap/rasterized graphic</param>
             /// <param name="iconSizePercent">Degree of percentage coverage of the QR code by the logo</param>
             /// <param name="fillLogoBackground">If true, the background behind the logo will be cleaned</param>
-            public SvgLogo(Bitmap iconRasterized, int iconSizePercent = 15, bool fillLogoBackground = true)
+            public SvgLogo(Image iconRasterized, int iconSizePercent = 15, bool fillLogoBackground = true)
             {
                 _iconSizePercent = iconSizePercent;
-                using (var ms = new System.IO.MemoryStream())
-                {
-                    using (var bitmap = new Bitmap(iconRasterized))
-                    {
-                        bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                        _logoData = Convert.ToBase64String(ms.GetBuffer(), Base64FormattingOptions.None); 
-                    }
-                }
+                //using (var ms = new System.IO.MemoryStream())
+                //{
+                //    using (var bitmap = new Bitmap(iconRasterized))
+                //    {
+                //        bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                //        _logoData = Convert.ToBase64String(ms.GetBuffer(), Base64FormattingOptions.None); 
+                //    }
+                //}
                 _mediaType = MediaType.PNG;
                 _fillLogoBackground = fillLogoBackground;
                 _logoRaw = iconRasterized;

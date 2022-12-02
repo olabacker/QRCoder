@@ -2,9 +2,8 @@
 using System.Text;
 using System.IO;
 using System.Security.Cryptography;
-#if !NETCOREAPP1_1
-using System.Drawing;
-#endif
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
 #if NETFRAMEWORK || NET5_0_WINDOWS
 using SW = System.Windows;
 using System.Windows.Media;
@@ -62,12 +61,12 @@ namespace QRCoderTests.Helpers
 
 
 #if !NETCOREAPP1_1
-        public static string BitmapToHash(Bitmap bmp)
+        public static string BitmapToHash(Image bmp)
         {
             byte[] imgBytes = null;
             using (var ms = new MemoryStream())
             {
-                bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                //bmp.Save(ms, new ImageFormat.Png);
                 imgBytes = ms.ToArray();
                 ms.Dispose();
             }
